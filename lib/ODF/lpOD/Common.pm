@@ -900,48 +900,14 @@ sub     not_implemented
 # supposedly remove them entirely.  To preserve existing semantics of
 # existing code including user-visible functions, I'm emulating (a subset of) 
 # the ~~ operator here.  -Jim Avera 6/10/2024
+#
+# 2/9/2025[jima]: Using CPAN's match::simple instead (my code was buggy...)
+use match::simple 0.012;
 sub     fake_smartmatch
         {
+          confess "Expecting two arguments" unless @_ == 2;
           my ($L, $R) = @_;
-          my $err;
-          if (@_ != 2) {
-            $err = "expects two args";
-          }
-          elsif (! defined($L)) {
-            return ! defined($R);
-          }
-          elsif (ref($L) ne "") {
-            $err = "only handles a simple left operand";
-          }
-          elsif (! defined($R)) {
-            return ! defined($L);
-          }
-          elsif ((my $rtype = ref($R)) ne "") {
-            if ($rtype eq "ARRAY") {
-              return any { __SUB__->($L,$_) } @$R;
-            }
-            elsif ($rtype eq "HASH") {
-              return exists($R->{$L});
-            }
-            elsif ($rtype eq "CODE") {
-              return $R->($L);
-            }
-            elsif ($rtype eq "RegExp") {
-              return $L =~ /$R/;
-            }
-            else {
-              $err = "does not handle operand of type $rtype"
-            }
-          }
-          else {
-            if (Scalar::Util::looks_like_number($R) || 
-                               Scalar::Util::looks_like_number($L)) {
-              return $L == $R;
-            } else {
-              return $L eq $R;
-            }
-          }
-          confess "fake_smartmatch $err";
+          match::simple::match($L,$R)
         }
 
 #=============================================================================

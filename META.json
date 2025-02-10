@@ -41,6 +41,7 @@
             "IO::File" : "1.14",
             "Image::Size" : "0",
             "LWP::Simple" : "0",
+            "match::simple" : "0.012",
             "Time::Local" : "1.07",
             "XML::Twig" : "3.34",
             "experimental" : "0",
