@@ -906,8 +906,8 @@ use match::simple 0.012;
 sub     fake_smartmatch
         {
           confess "Expecting two arguments" unless @_ == 2;
-          my ($L, $R) = @_;
-          match::simple::match($L,$R)
+          confess "Left side must be simple" if ref($_[0]);
+          match::simple::match($_[0],$_[1])
         }
 
 #=============================================================================
